@@ -155,7 +155,6 @@ const App: React.FC = () => {
           <CookieConsent />
        
            </div>
-        </Analytics>
       </Router>
     </ErrorBoundary>
   );
