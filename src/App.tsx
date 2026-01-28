@@ -154,8 +154,8 @@ const App: React.FC = () => {
           <Footer />
           <CookieConsent />
        
-        </div>
-      </Analytics>
+           </div>
+        </Analytics>
       </Router>
     </ErrorBoundary>
   );
