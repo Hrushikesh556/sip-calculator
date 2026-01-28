@@ -153,6 +153,7 @@ const App: React.FC = () => {
           </main>
           <Footer />
           <CookieConsent />
+        </Analytics>
         </div>
       </Router>
     </ErrorBoundary>
