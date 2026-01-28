@@ -1,0 +1,10 @@
+# Robots.txt for SIP Calculator India
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sipcalculator.in/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
