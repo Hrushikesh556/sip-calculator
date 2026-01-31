@@ -58,6 +58,7 @@ interface SliderInputProps {
   step?: number;
   prefix?: string;
   suffix?: string;
+  id: string;
 }
 
 const SliderInput: React.FC<SliderInputProps> = ({
@@ -69,35 +70,52 @@ const SliderInput: React.FC<SliderInputProps> = ({
   step = 1,
   prefix = '',
   suffix = '',
+  id,
 }) => {
   const percentage = ((value - min) / (max - min)) * 100;
 
   return (
     <div className="mb-4 sm:mb-6">
       <div className="flex flex-col xs:flex-row xs:justify-between xs:items-center mb-2 sm:mb-3 gap-1 xs:gap-0">
-        <label className="text-gray-700 font-medium text-sm sm:text-base">{label}</label>
+        <label 
+          htmlFor={id}
+          className="text-gray-700 font-medium text-sm sm:text-base"
+        >
+          {label}
+        </label>
         <div className="flex items-center bg-blue-50 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 w-fit">
-          <span className="text-blue-600 font-bold text-sm sm:text-lg">
+          <span 
+            className="text-blue-700 font-bold text-sm sm:text-lg"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             {prefix}{value.toLocaleString('en-IN')}{suffix}
           </span>
         </div>
       </div>
       <div className="relative">
         <input
+          id={id}
+          name={id}
           type="range"
           min={min}
           max={max}
           step={step}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full h-2 sm:h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb"
+          aria-label={`${label}: ${prefix}${value.toLocaleString('en-IN')}${suffix}`}
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={value}
+          aria-valuetext={`${prefix}${value.toLocaleString('en-IN')}${suffix}`}
+          className="w-full h-2 sm:h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           style={{
             background: `linear-gradient(to right, #3B82F6 0%, #6366F1 ${percentage}%, #E5E7EB ${percentage}%, #E5E7EB 100%)`,
           }}
         />
-        <div className="flex justify-between mt-1 sm:mt-2">
-          <span className="text-[10px] sm:text-xs text-gray-500">{prefix}{min.toLocaleString('en-IN')}{suffix}</span>
-          <span className="text-[10px] sm:text-xs text-gray-500">{prefix}{max.toLocaleString('en-IN')}{suffix}</span>
+        <div className="flex justify-between mt-1 sm:mt-2" aria-hidden="true">
+          <span className="text-[10px] sm:text-xs text-gray-600">{prefix}{min.toLocaleString('en-IN')}{suffix}</span>
+          <span className="text-[10px] sm:text-xs text-gray-600">{prefix}{max.toLocaleString('en-IN')}{suffix}</span>
         </div>
       </div>
     </div>
@@ -457,35 +475,35 @@ const Calculator: React.FC = () => {
       case 'sip':
         return (
           <>
-            <SliderInput label="Monthly Investment" value={sipMonthly} onChange={setSipMonthly} min={500} max={100000} step={500} prefix="₹" />
-            <SliderInput label="Expected Return (p.a.)" value={sipReturn} onChange={setSipReturn} min={1} max={30} step={0.5} suffix="%" />
-            <SliderInput label="Time Period" value={sipYears} onChange={setSipYears} min={1} max={40} suffix=" Years" />
+            <SliderInput id="sip-monthly" label="Monthly Investment" value={sipMonthly} onChange={setSipMonthly} min={500} max={100000} step={500} prefix="₹" />
+            <SliderInput id="sip-return" label="Expected Return (p.a.)" value={sipReturn} onChange={setSipReturn} min={1} max={30} step={0.5} suffix="%" />
+            <SliderInput id="sip-years" label="Time Period" value={sipYears} onChange={setSipYears} min={1} max={40} suffix=" Years" />
           </>
         );
       case 'stepup':
         return (
           <>
-            <SliderInput label="Monthly Investment" value={stepupMonthly} onChange={setStepupMonthly} min={500} max={100000} step={500} prefix="₹" />
-            <SliderInput label="Annual Step-Up" value={stepupPercent} onChange={setStepupPercent} min={0} max={50} suffix="%" />
-            <SliderInput label="Expected Return (p.a.)" value={stepupReturn} onChange={setStepupReturn} min={1} max={30} step={0.5} suffix="%" />
-            <SliderInput label="Time Period" value={stepupYears} onChange={setStepupYears} min={1} max={40} suffix=" Years" />
+            <SliderInput id="stepup-monthly" label="Monthly Investment" value={stepupMonthly} onChange={setStepupMonthly} min={500} max={100000} step={500} prefix="₹" />
+            <SliderInput id="stepup-percent" label="Annual Step-Up" value={stepupPercent} onChange={setStepupPercent} min={0} max={50} suffix="%" />
+            <SliderInput id="stepup-return" label="Expected Return (p.a.)" value={stepupReturn} onChange={setStepupReturn} min={1} max={30} step={0.5} suffix="%" />
+            <SliderInput id="stepup-years" label="Time Period" value={stepupYears} onChange={setStepupYears} min={1} max={40} suffix=" Years" />
           </>
         );
       case 'lumpsum':
         return (
           <>
-            <SliderInput label="Investment Amount" value={lumpsumAmount} onChange={setLumpsumAmount} min={10000} max={10000000} step={10000} prefix="₹" />
-            <SliderInput label="Expected Return (p.a.)" value={lumpsumReturn} onChange={setLumpsumReturn} min={1} max={30} step={0.5} suffix="%" />
-            <SliderInput label="Time Period" value={lumpsumYears} onChange={setLumpsumYears} min={1} max={40} suffix=" Years" />
+            <SliderInput id="lumpsum-amount" label="Investment Amount" value={lumpsumAmount} onChange={setLumpsumAmount} min={10000} max={10000000} step={10000} prefix="₹" />
+            <SliderInput id="lumpsum-return" label="Expected Return (p.a.)" value={lumpsumReturn} onChange={setLumpsumReturn} min={1} max={30} step={0.5} suffix="%" />
+            <SliderInput id="lumpsum-years" label="Time Period" value={lumpsumYears} onChange={setLumpsumYears} min={1} max={40} suffix=" Years" />
           </>
         );
       case 'swp':
         return (
           <>
-            <SliderInput label="Initial Investment" value={swpInitial} onChange={setSwpInitial} min={100000} max={10000000} step={50000} prefix="₹" />
-            <SliderInput label="Monthly Withdrawal" value={swpWithdrawal} onChange={setSwpWithdrawal} min={1000} max={100000} step={1000} prefix="₹" />
-            <SliderInput label="Expected Return (p.a.)" value={swpReturn} onChange={setSwpReturn} min={1} max={20} step={0.5} suffix="%" />
-            <SliderInput label="Time Period" value={swpYears} onChange={setSwpYears} min={1} max={40} suffix=" Years" />
+            <SliderInput id="swp-initial" label="Initial Investment" value={swpInitial} onChange={setSwpInitial} min={100000} max={10000000} step={50000} prefix="₹" />
+            <SliderInput id="swp-withdrawal" label="Monthly Withdrawal" value={swpWithdrawal} onChange={setSwpWithdrawal} min={1000} max={100000} step={1000} prefix="₹" />
+            <SliderInput id="swp-return" label="Expected Return (p.a.)" value={swpReturn} onChange={setSwpReturn} min={1} max={20} step={0.5} suffix="%" />
+            <SliderInput id="swp-years" label="Time Period" value={swpYears} onChange={setSwpYears} min={1} max={40} suffix=" Years" />
           </>
         );
     }
@@ -562,15 +580,15 @@ const Calculator: React.FC = () => {
                 <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-gray-800">{row.year}</td>
                 {activeTab === 'swp' ? (
                   <>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-green-600">₹{row.withdrawn?.toLocaleString('en-IN')}</td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-blue-600">₹{row.balance?.toLocaleString('en-IN')}</td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-green-700 font-medium">₹{row.withdrawn?.toLocaleString('en-IN')}</td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-blue-700 font-medium">₹{row.balance?.toLocaleString('en-IN')}</td>
                   </>
                 ) : (
                   <>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-green-600">₹{row.invested?.toLocaleString('en-IN')}</td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-blue-600">₹{row.value?.toLocaleString('en-IN')}</td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-green-700 font-medium">₹{row.invested?.toLocaleString('en-IN')}</td>
+                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-blue-700 font-medium">₹{row.value?.toLocaleString('en-IN')}</td>
                     {activeTab === 'stepup' && (
-                      <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-purple-600 hidden sm:table-cell">₹{row.monthlyContribution?.toLocaleString('en-IN')}</td>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3 text-right text-purple-700 font-medium hidden sm:table-cell">₹{row.monthlyContribution?.toLocaleString('en-IN')}</td>
                     )}
                   </>
                 )}
@@ -747,10 +765,11 @@ const Calculator: React.FC = () => {
                   href="https://groww.in"
                   target="_blank"
                   rel="noopener noreferrer sponsored"
-                  className="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
+                  aria-label="Start SIP on Groww - Opens in new tab"
+                  className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
                 >
                   <span>Groww</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </a>
@@ -758,10 +777,11 @@ const Calculator: React.FC = () => {
                   href="https://zerodha.com"
                   target="_blank"
                   rel="noopener noreferrer sponsored"
-                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
+                  aria-label="Invest with Zerodha - Opens in new tab"
+                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
                 >
                   <span>Zerodha</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </a>
@@ -769,10 +789,11 @@ const Calculator: React.FC = () => {
                   href="https://upstox.com"
                   target="_blank"
                   rel="noopener noreferrer sponsored"
-                  className="flex items-center space-x-2 bg-purple-500 hover:bg-purple-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
+                  aria-label="Open account on Upstox - Opens in new tab"
+                  className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
                 >
                   <span>Upstox</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </a>
@@ -780,10 +801,11 @@ const Calculator: React.FC = () => {
                   href="https://kuvera.in"
                   target="_blank"
                   rel="noopener noreferrer sponsored"
-                  className="flex items-center space-x-2 bg-indigo-500 hover:bg-indigo-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
+                  aria-label="Invest with Kuvera - Opens in new tab"
+                  className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg hover:shadow-xl"
                 >
                   <span>Kuvera</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </a>
